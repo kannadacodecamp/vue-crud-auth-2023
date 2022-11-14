@@ -9,11 +9,26 @@
         </p>
       </div>
       <div class="d-flex justify-content-around pb-3">
-        <button class="btn btn-info" @click="editUser(user.id)">Edit</button>
-        <button class="btn btn-danger" @click="deleteUser(user.id)">
+        <button
+          type="button"
+          class="btn btn-info"
+          @click="authStore.editUser(user.id)"
+        >
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          @click="authStore.deleteUser(user.id)"
+        >
           Delete
         </button>
       </div>
+
+      <!-- deleteModal :: start -->
+
+      <!-- deleteModal :: start -->
     </div>
   </div>
 </template>
@@ -23,14 +38,8 @@ import { onMounted } from "vue";
 import { useAuthStore } from "../stores/auth";
 
 const authStore = useAuthStore();
+
 onMounted(() => {
   authStore.listUsers();
 });
-
-const editUser = (e: number) => {
-  authStore.editUser(e);
-};
-const deleteUser = (e: number) => {
-  authStore.deleteUser(e);
-};
 </script>

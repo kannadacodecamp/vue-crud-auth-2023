@@ -25,14 +25,14 @@
         <div class="d-flex">
           <button
             class="btn btn-danger"
-            v-if="authStore.isAuthenticated"
+            v-if="authStore.isLoggedIn"
             @click="authStore.logoutUser()"
           >
             LOGOUT
           </button>
           <router-link
             class="btn btn-success"
-            v-if="!authStore.isAuthenticated"
+            v-if="!authStore.isLoggedIn"
             to="/login"
             >LOGIN</router-link
           >

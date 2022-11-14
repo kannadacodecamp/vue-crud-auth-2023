@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useCookies } from "@vueuse/integrations/useCookies";
-// import { useRouter } from "vue-router";
 import router from "../router/index";
 
 const cookies = useCookies();
-// const router = useRouter();
 
 interface CredPayload {
   email: string;
@@ -23,7 +21,6 @@ interface User {
 interface AuthState {
   users: User[];
   token: string;
-  isAuthenticated: boolean;
 }
 
 export const useAuthStore = defineStore({
@@ -31,8 +28,12 @@ export const useAuthStore = defineStore({
   state: (): AuthState => ({
     users: [],
     token: "",
-    isAuthenticated: false,
   }),
+  getters: {
+    isLoggedIn() {
+      return cookies.get("auth_token") !== undefined ? true : false;
+    },
+  },
   actions: {
     // List Users
     async listUsers(): Promise<void> {
@@ -45,7 +46,7 @@ export const useAuthStore = defineStore({
         console.log(error);
       }
     },
-    // Register
+    // Register User
     async registerUser(payload: CredPayload): Promise<void> {
       try {
         const res = await axios.post("https://reqres.in/api/register", payload);
@@ -57,28 +58,28 @@ export const useAuthStore = defineStore({
         console.log(error);
       }
     },
-    // Login
+    // Login User
     async loginUser(payload: CredPayload): Promise<void> {
       try {
         const res = await axios.post("https://reqres.in/api/login", payload);
         if (res.status === 200) {
           this.token = res.data.token;
           cookies.set("auth_token", res.data.token);
-          this.isAuthenticated = true;
           router.push({ name: "users" });
         }
       } catch (error) {
         console.log(error);
       }
     },
-    // Edit
+    // Edit User
     editUser(id: number) {
       console.log(`user id to update ${id}`);
     },
-    // Delete
+    // Delete User
     async deleteUser(id: number): Promise<void> {
       try {
         const res = await axios.delete(`https://reqres.in/api/users/${id}`);
+        console.log(res);
         if (res.status === 204) {
           this.listUsers();
         }
@@ -86,11 +87,9 @@ export const useAuthStore = defineStore({
         console.log("error", error);
       }
     },
-    //Logout
+    //Logout User
     logoutUser() {
-      this.token = "";
       cookies.remove("auth_token");
-      this.isAuthenticated = false;
       router.push({ name: "home" });
     },
   },
