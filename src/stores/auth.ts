@@ -72,16 +72,15 @@ export const useAuthStore = defineStore({
       }
     },
     // Edit User
-    editUser(id: number) {
-      console.log(`user id to update ${id}`);
+    editUser(payload: number) {
+      alert(`payload to update = ${JSON.stringify(payload)}`);
     },
     // Delete User
     async deleteUser(id: number): Promise<void> {
       try {
         const res = await axios.delete(`https://reqres.in/api/users/${id}`);
-        console.log(res);
         if (res.status === 204) {
-          this.listUsers();
+          alert("User Deleted successfully");
         }
       } catch (error) {
         console.log("error", error);
